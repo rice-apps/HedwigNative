@@ -4,6 +4,7 @@ import { ApolloProvider, useQuery, gql } from '@apollo/client';
 import Navigator from './Navigator';
 
 import { client  } from './apollo';
+import { StateProvider } from './store';
 
 // const GET_TWEET = gql`
 //   query {
@@ -99,7 +100,9 @@ import { client  } from './apollo';
 export default function App() {
   return (
     <ApolloProvider client={client}>
-      <Navigator />
+        <StateProvider>
+            <Navigator />
+        </StateProvider>
     </ApolloProvider>
   );
 }
