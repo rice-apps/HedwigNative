@@ -1,7 +1,39 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+// Apollo Client Setup
+import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client';
+import { getMainDefinition } from '@apollo/client/utilities';
+
+// Apollo Subscriptions Setup
+import { WebSocketLink } from '@apollo/link-ws';
 // import { setContext } from '@apollo/link-context';
 
-const GRAPHQL_API_URL = 'https://www.graphqlhub.com/graphql';
+const GRAPHQL_API_URL = 'http://localhost:4000/graphql';
+const GRAPHQL_WS_URL = 'ws://localhost:4000/graphql';
+
+// HTTP Backend Link
+const httpLink = new HttpLink({
+    uri: GRAPHQL_API_URL
+});
+
+// WebSocket Backend Link
+const wsLink = new WebSocketLink({
+    uri: GRAPHQL_WS_URL,
+    options: {
+      reconnect: true
+    }
+});
+
+// Uses wsLink for subscriptions, httpLink for queries & mutations (everything else)
+const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+);
 
 /*
 uncomment the code below in case you are using a GraphQL API that requires some form of
@@ -20,12 +52,9 @@ const asyncAuthLink = setContext(async () => {
 
 */
 
-const httpLink = new HttpLink({
-  uri: GRAPHQL_API_URL,
-});
-
-export const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: httpLink,
-  // link: asyncAuthLink.concat(httpLink), 
+// Initialize Client
+export const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: splitLink
+    // link: asyncAuthLink.concat(splitLink), 
 });
