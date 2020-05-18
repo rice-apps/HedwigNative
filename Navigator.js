@@ -6,6 +6,7 @@ import VendorList from './Screens/VendorList';
 import VendorDetail from './Screens/VendorDetail';
 import ProductDetail from './Screens/ProductDetail';
 import CartDetail from './Screens/CartDetail';
+import OrderDetail from './Screens/OrderDetail';
 
 // Import all components with routes here
 
@@ -20,6 +21,7 @@ function Navigator() {
         <Stack.Screen name="VendorDetail" component={VendorDetail} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
         <Stack.Screen name="CartDetail" component={CartDetail} />
+        <Stack.Screen name="OrderDetail" component={OrderDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

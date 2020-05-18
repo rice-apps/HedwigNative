@@ -25,7 +25,7 @@ const ProductDetail = ({ route, navigation }) => {
     const { state, dispatch } = useContext(store);  
     
     // We define
-    const vendorID = product.vendor._id;
+    const vendorID = product.vendor ? product.vendor._id : "";
     const orderItem = {
         product: product,
         addons: [],

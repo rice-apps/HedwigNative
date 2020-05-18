@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Text, View, ActivityIndicator, StyleSheet, SafeAreaView, FlatList, Button } from 'react-native';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation } from '@apollo/client';
 import { store, ADD_VENDOR_CART } from '../../store';
 
 const styles = StyleSheet.create(({
@@ -29,24 +29,8 @@ const GET_VENDOR_PRODUCTS_QUERY = gql`
                 _id
             }
             description
-            type
             category
             price
-        }
-    }
-`
-
-const LOCAL_CREATE_ORDER_MUTATION = gql`
-    mutation CreateOrder($userID:MongoID!, $vendorID:MongoID!) {
-        orderCreateOne(record:{user:$userID, vendor:$vendorID, items:[]}) {
-            record {
-                items {
-                    product {
-                        name
-                    }
-                }
-            }
-            recordId
         }
     }
 `
@@ -80,7 +64,7 @@ const VendorDetail = ({ route, navigation }) => {
         </SafeAreaView>
         );
     };
-    if (!data) return <p>No data...</p>;
+    if (!data) return (<Text>No data...</Text>);
 
     const products = data.productMany;
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Text, View, ActivityIndicator, StyleSheet, SafeAreaView, FlatList } from 'react-native';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation, useApolloClient } from '@apollo/client';
 import { store, ADD_VENDOR_CART } from '../../store';
 
 const styles = StyleSheet.create(({
@@ -39,11 +39,53 @@ const GET_VENDORS_QUERY = gql`
     }
 `
 
+const CREATE_ORDER_MUTATION = gql`
+    mutation CreateOrder($userID:MongoID!, $vendorID:MongoID!) {
+        orderCreateOne(record:{user:$userID, vendor:$vendorID}) {
+            record {
+                _id
+                createdAt
+                items {
+                    product {
+                        name
+                    }   
+                    comments
+                }
+            }
+            recordId
+        }
+    }
+`
+
+const GET_ORDER_QUERY = gql`
+    query OrderSelect($userID: MongoID!, $vendorID: MongoID!) {
+        orderOne(filter:{ user:$userID, vendor:$vendorID, fulfillment:Not_Placed}) {
+            _id
+            createdAt
+            items {
+                product {
+                    name
+                }   
+                comments
+            }
+        }
+    }
+`
+
 const VendorCard = ({ vendor, navigation }) => {
     console.log("VEndor card.");
     console.log(vendor);
+
+    let userID = "5ebcc3b7a55cea938d503171";
+    let vendorID = vendor._id;
+
+    const handleClick = () => {
+        // Change page
+        navigation.navigate('VendorDetail', { vendor: vendor });
+    }
+
     return (
-        <View style={styles.item} onTouchEnd={() => navigation.navigate('VendorDetail', { vendor: vendor })}>
+        <View style={styles.item} onTouchEnd={handleClick}>
             <Text>{vendor.name}</Text>
             <Text>Pickup at: {vendor.locations.map(location => location.name).join(", ")} </Text>
         </View>

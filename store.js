@@ -3,17 +3,16 @@ import React, {createContext, useReducer} from 'react';
 import _ from 'lodash';
 
 const initialState = {
-    userID: "",
+    userID: "5ebcc3b7a55cea938d503171",
     cart: []
 };
 const store = createContext(initialState);
 const { Provider } = store;
 
 // Actions
-export const ADD_VENDOR_CART = "ADD_VENDOR_CART";
-export const REMOVE_VENDOR_CART = "REMOVE_VENDOR_CART";
 export const ADD_TO_CART = "ADD_TO_CART";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
+export const CLEAR_CART = "CLEAR_CART";
 
 const reducer = (state, action) => {
     let newCart;
@@ -27,6 +26,8 @@ const reducer = (state, action) => {
             newCart = _.cloneDeep(state.cart);
             let itemIndex = newState.cart.findIndex(item);
             return {...state, cart: newCart.splice(itemIndex, 1)}
+        case CLEAR_CART:
+            return {...state, cart: []};
         default:
             return {...state};
     };

@@ -1,5 +1,5 @@
 // Apollo Client Setup
-import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, split, gql } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 // Apollo Subscriptions Setup
@@ -52,9 +52,24 @@ const asyncAuthLink = setContext(async () => {
 
 */
 
+/**
+ * Define client-side gql queries/mutations/etc
+ */
+
+/**
+ * Define client-side data
+ */
+
+/**
+ * Define client-side resolvers
+ */
+
+
 // Initialize Client
+const cache = new InMemoryCache();
+
 export const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: cache,
     link: splitLink
     // link: asyncAuthLink.concat(splitLink), 
 });
